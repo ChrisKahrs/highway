@@ -1,0 +1,9 @@
+msal-extensions
+numpy
+python-dotenv
+bonsai-cli
+microsoft-bonsai-api
+pyglet
+pandas
+gym
+highway-env

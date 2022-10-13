@@ -1,38 +1,111 @@
-# About bonsai-sim-connector-template
+# SAMPLE_NAME
 
-This is a template for creating [Bonsai Connectors](https://docs.microsoft.com/en-us/autonomous-systems/bonsai-connectors). It can serve
-as a starting point for making a simulation platform work with Bonsai.
+> TODO: Describe your sample. What is it that it simulates?
 
-> Note that this template assumes you will be developing in Python. Bonsai also supports
-> [Java and TypeScript libraries](https://github.com/microsoft/microsoft-bonsai-api). For those languages, you *can* use this template,
-> but you will need to adjust the Python portions to perform the equivalent operations in the other language.
+## Simulation Model Variables
 
-You can use this template by:
-1. Use GitHub to [create a new repository based on this template](https://github.com/microsoft/bonsai-sim-connector-template/generate). Or
-if you don't prefer to use GitHub you make a copy of the files however you like.
-2. Find and replace SIM_PLATFORM with the name of the simulation platform for which you are making a connector.
-3. Find and replace SAMPLE_NAME with the name of a sample use case that you will use to demonstrate your connector.
-4. Find the sections of the connector that say "TODO" and implement the required functionality. See
-[Build a Python connector](https://docs.microsoft.com/en-us/autonomous-systems/bonsai-connectors/guides/dedicated-connector-python) for more
-information about Bonsai connectors and step-by-step instructions for implementing one.
-5. Delete these instructions. Your users are interested in your connector--not the template that it came from. Remove this whole section from this point to the top of the file.
+> TODO: Describe the simulation's configuration, state, and action variables. A table can be a good way to document this. For example:
 
-# SIM_PLATFORM connector
+| Configuration | Description |
+| ----- | ----- |
+| initial_value | Value at which the simulation will start. |
 
-A connector for using SIM_PLATFORM with [Microsoft Project Bonsai](https://azure.microsoft.com/en-us/services/project-bonsai/).
+| State | Description |
+| ----- | ----- |
+| value | Current value. |
 
-> TODO: Give a brief overview of the capabilities of SIM_PLATFORM and entice users with potential use cases for using SIM_PLATFORM to create Bonsai brains for controlling autonomous systems.
+| Action | Description | 
+| ------ | -------------------- |
+| addend | Value that will be added to the current value. |
 
-## Samples
+## How to run the sample
 
-[SAMPLE_NAME](samples/SAMPLE_NAME/README.md)
+The following steps use the [Bonsai CLI](https://docs.microsoft.com/en-us/bonsai/cli) to test, upload the SAMPLE_NAME simulator to the Bonsai service, and train a brain.
 
-> TODO: Describe how a user could customize the supplied sample to run a different simulation model that they created with SIM_PLATFORM.
+### 1. Set up environment variables
 
-## Trademarks
+Set up the following environment variable on your development PC:
 
-This project may contain trademarks or logos for projects, products, or services. Authorized use of Microsoft 
-trademarks or logos is subject to and must follow 
-[Microsoft's Trademark & Brand Guidelines](https://www.microsoft.com/en-us/legal/intellectualproperty/trademarks/usage/general).
-Use of Microsoft trademarks or logos in modified versions of this project must not cause confusion or imply Microsoft sponsorship.
-Any use of third-party trademarks or logos are subject to those third-party's policies.
+| Environment Variable | Description |
+| ----- | ----- |
+| SIM_WORKSPACE | The workspace ID from [your workspace details](https://docs.microsoft.com/en-us/bonsai/cookbook/get-workspace-info). |
+| SIM_ACCESS_KEY | The access key from [your workspace details](https://docs.microsoft.com/en-us/bonsai/cookbook/get-workspace-info). |
+
+Make sure those environment variables have been applied in the command window that you use for the next steps.
+
+### 2. Set up Python environment
+
+Set up your python environment as described in the [Bonsai CLI Get started docs](https://docs.microsoft.com/en-us/bonsai/cli).
+Then install the Python requirements of this sample by:
+
+```
+pip install -r requirements.txt
+```
+
+> TODO: Add a step describing additional setup required such as installing your simulator runtime or a simulator license.
+
+### 3. Connect local instance of the simulator
+
+Run the simulator locally by:
+
+```
+python main.py
+```
+
+The output should say `Registered simulator` followed by--every several seconds--a line saying `Last Event: Idle`.
+
+> NOTE: The next step uses Bonsai CLI commands.
+> If you prefer, these opererations can also be performed using your [Bonsai worspace](https://preview.bons.ai/) GUI as described in [Link an unmanaged simulator to Bonsai](https://docs.microsoft.com/en-us/bonsai/guides/run-a-local-sim?tabs=bash%2Ctest-with-ui&pivots=sim-lang-python).
+
+While main.py continues to run, open a new commmand window and use the Bonsai CLI to create a Bonsai brain and start training by:
+
+```
+bonsai brain create -n SAMPLE_NAME-brain
+bonsai brain version update-inkling -f machine_teacher.ink -n SAMPLE_NAME-brain
+bonsai brain version start-training -n SAMPLE_NAME-brain
+bonsai simulator unmanaged connect --simulator-name SAMPLE_NAME-sim -a Train -b SAMPLE_NAME-brain -c Concept
+```
+
+The output should say `Simulators Connected: 1`. After a minute or so, you should see lots of activity in the console window that
+is running main.py and if you open your [Bonsai worspace](https://preview.bons.ai/) you should see that the brain named SAMPLE_NAME-brain
+is running training episodes. We'll complete training in a faster way in the next step, so for now you can manually stop training by:
+
+```
+bonsai brain version stop-training -n SAMPLE_NAME-brain
+```
+
+Press Ctrl+C to stop the simulator running main.py in your first console window.
+
+### 4. Build the simulator package and scale training using the cloud
+
+> For this step, you must have Docker installed on your local machine. The community edition of Docker is available for
+> [Windows](https://docs.docker.com/docker-for-windows/install), [Linux](https://docs.docker.com/engine/install), and
+> [MacOS](https://docs.docker.com/docker-for-mac/install).
+
+Build a Docker container image and push it to your registry.
+In the following commands, `<SUBSCRIPTION>` and `<WORKSPACE_ACR_PATH>` should be replaced with
+[your workspace details](https://docs.microsoft.com/en-us/bonsai/cookbook/get-workspace-info):
+
+```
+docker build -t SAMPLE_NAME-container:latest -f Dockerfile ../..
+docker tag SAMPLE_NAME-container:latest <WORKSPACE_ACR_PATH>/SAMPLE_NAME-container:latest
+az acr login --subscription <SUBSCRIPTION> --name <WORKSPACE_ACR_PATH>
+docker push <WORKSPACE_ACR_PATH>/SAMPLE_NAME-container:latest
+```
+
+> NOTE: The next step uses Bonsai CLI commands.
+> If you prefer, these opererations can also be performed using your [Bonsai worspace](https://preview.bons.ai/) GUI as described
+> in [Add a training simulator to your Bonsai workspace](https://docs.microsoft.com/en-us/bonsai/guides/add-simulator?tabs=add-cli%2Ctrain-inkling&pivots=sim-platform-other).
+
+Create a Bonsai simulator package and run training with it by:
+
+```
+bonsai simulator package container create -n SAMPLE_NAME-pkg -u <WORKSPACE_ACR_PATH>/SAMPLE_NAME-container:latest --max-instance-count 25 -r 1 -m 1 -p Linux
+bonsai brain version start-training -n SAMPLE_NAME-brain --simulator-package-name SAMPLE_NAME-pkg
+```
+
+Next, open your [Bonsai worspace](https://preview.bons.ai/) and you should see your SAMPLE_NAME-brain brain is running training.
+If you look in the Train tab, after a few minutes, you will see that simulators have started up and episodes are being executed.
+After approximately 200,000 iterations you should see in the training graph shows 100% goal satisfaction and 100% success rate.
+You can stop the training at this point or let training continue to run. It will eventually stop when it can no longer find improvements
+to reach the goal in a more optimal fashion.

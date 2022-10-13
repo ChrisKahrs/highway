@@ -9,7 +9,7 @@ from microsoft_bonsai_api.simulator.generated.models import SimulatorInterface, 
 # Add parent directory containing the connector folder to path.
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
-from connector.simulator_model import SimulatorModel
+from simulator_model import SimulatorModel
 
 def main():
     """
@@ -24,7 +24,7 @@ def main():
 
 
     registration_info = SimulatorInterface(
-        name="SAMPLE_NAME-sim",
+        name="Highway-sim",
         timeout=60,
         simulator_context=config_client.simulator_context,
         description=None,
