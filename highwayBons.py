@@ -21,17 +21,12 @@ while True:
   obs = env.reset()
   while not done:
     print("obs: ", obs)
-    v1 = [float(obs[0][0]), float(obs[0][1]), float(obs[0][2]), float(obs[0][3]), float(obs[0][4]), 0.0,0.0]
-    v2 = [float(obs[1][0]), float(obs[1][1]), float(obs[1][2]), float(obs[1][3]), float(obs[1][4]), 0.0,0.0]
-    v3 = [float(obs[2][0]), float(obs[2][1]), float(obs[2][2]), float(obs[2][3]), float(obs[2][4]), 0.0,0.0]
-    v4 = [float(obs[3][0]), float(obs[3][1]), float(obs[3][2]), float(obs[3][3]), float(obs[3][4]), 0.0,0.0]
-    v5 = [float(obs[4][0]), float(obs[4][1]), float(obs[4][2]), float(obs[4][3]), float(obs[4][4]), 0.0,0.0]
-    # print("v1: ", v1)
-    # print("v2: ", v2)
-    # print("v3: ", v3)
-    # print("v4: ", v4)
-    # print("v5: ", v5)
-    
+    v1 = [float(obs[0][0]), float(obs[0][1]), float(obs[0][2]), float(obs[0][3]), float(obs[0][4]), float(obs[0][5]), float(obs[0][6])]
+    v2 = [float(obs[1][0]), float(obs[1][1]), float(obs[1][2]), float(obs[1][3]), float(obs[1][4]), float(obs[1][5]), float(obs[1][6])]
+    v3 = [float(obs[2][0]), float(obs[2][1]), float(obs[2][2]), float(obs[2][3]), float(obs[2][4]), float(obs[2][5]), float(obs[2][6])]
+    v4 = [float(obs[3][0]), float(obs[3][1]), float(obs[3][2]), float(obs[3][3]), float(obs[3][4]), float(obs[3][5]), float(obs[3][6])]
+    v5 = [float(obs[4][0]), float(obs[4][1]), float(obs[4][2]), float(obs[4][3]), float(obs[4][4]), float(obs[4][5]), float(obs[4][6])]
+      
     requestBody = {
       "vehicle1":  v1,
       "vehicle2":  v2,
