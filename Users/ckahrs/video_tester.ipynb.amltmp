@@ -1,0 +1,206 @@
+{
+  "cells": [
+    {
+      "cell_type": "code",
+      "source": [
+        "!apt-get install -y xvfb python-opengl > /dev/null 2>&1"
+      ],
+      "outputs": [],
+      "execution_count": 1,
+      "metadata": {}
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "!pip install gym pyvirtualdisplay > /dev/null 2>&1"
+      ],
+      "outputs": [],
+      "execution_count": 2,
+      "metadata": {
+        "jupyter": {
+          "source_hidden": false,
+          "outputs_hidden": false
+        },
+        "nteract": {
+          "transient": {
+            "deleting": false
+          }
+        }
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import gym\r\n",
+        "import numpy as np\r\n",
+        "import matplotlib.pyplot as plt\r\n",
+        "from IPython import display as ipythondisplay"
+      ],
+      "outputs": [],
+      "execution_count": 3,
+      "metadata": {
+        "jupyter": {
+          "source_hidden": false,
+          "outputs_hidden": false
+        },
+        "nteract": {
+          "transient": {
+            "deleting": false
+          }
+        }
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "from pyvirtualdisplay import Display\r\n",
+        "display = Display(visible=0, size=(400, 300))\r\n",
+        "display.start()"
+      ],
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "execution_count": 8,
+          "data": {
+            "text/plain": "<pyvirtualdisplay.display.Display at 0x7fd8f8083ca0>"
+          },
+          "metadata": {}
+        }
+      ],
+      "execution_count": 8,
+      "metadata": {
+        "jupyter": {
+          "source_hidden": false,
+          "outputs_hidden": false
+        },
+        "nteract": {
+          "transient": {
+            "deleting": false
+          }
+        }
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# !pip install pygame\r\n",
+        "# !pip install highway-env\r\n",
+        "import pygame\r\n",
+        "import highway_env\r\n",
+        "\r\n",
+        "env = gym.make(\"highway-v0\")\r\n",
+        "env.reset()\r\n",
+        "prev_screen = env.render(mode='rgb_array')\r\n",
+        "plt.imshow(prev_screen)\r\n",
+        "\r\n",
+        "for i in range(50):\r\n",
+        "  action = env.action_space.sample()\r\n",
+        "  obs, reward, done, info = env.step(action)\r\n",
+        "  screen = env.render(mode='rgb_array')\r\n",
+        "  \r\n",
+        "  plt.imshow(screen)\r\n",
+        "  ipythondisplay.clear_output(wait=True)\r\n",
+        "  ipythondisplay.display(plt.gcf())\r\n",
+        "\r\n",
+        "  if done:\r\n",
+        "    break\r\n",
+        "    \r\n",
+        "ipythondisplay.clear_output(wait=True)\r\n",
+        "env.close()"
+      ],
+      "outputs": [
+        {
+          "output_type": "display_data",
+          "data": {
+            "text/plain": "<Figure size 432x288 with 1 Axes>",
+            "image/png": "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\n"
+          },
+          "metadata": {
+            "needs_background": "light"
+          }
+        }
+      ],
+      "execution_count": 9,
+      "metadata": {
+        "jupyter": {
+          "source_hidden": false,
+          "outputs_hidden": false
+        },
+        "nteract": {
+          "transient": {
+            "deleting": false
+          }
+        }
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "display.stop()"
+      ],
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "execution_count": 6,
+          "data": {
+            "text/plain": "<pyvirtualdisplay.display.Display at 0x7fd941654490>"
+          },
+          "metadata": {}
+        }
+      ],
+      "execution_count": 6,
+      "metadata": {
+        "jupyter": {
+          "source_hidden": false,
+          "outputs_hidden": false
+        },
+        "nteract": {
+          "transient": {
+            "deleting": false
+          }
+        }
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [],
+      "outputs": [],
+      "execution_count": null,
+      "metadata": {
+        "jupyter": {
+          "source_hidden": false,
+          "outputs_hidden": false
+        },
+        "nteract": {
+          "transient": {
+            "deleting": false
+          }
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "kernelspec": {
+      "display_name": "Python 3.8 - AzureML",
+      "language": "python",
+      "name": "python38-azureml"
+    },
+    "language_info": {
+      "codemirror_mode": {
+        "name": "ipython",
+        "version": 3
+      },
+      "file_extension": ".py",
+      "mimetype": "text/x-python",
+      "name": "python",
+      "nbconvert_exporter": "python",
+      "pygments_lexer": "ipython3",
+      "version": "3.8.1"
+    },
+    "nteract": {
+      "version": "nteract-front-end@1.0.0"
+    }
+  },
+  "nbformat": 4,
+  "nbformat_minor": 0
+}
