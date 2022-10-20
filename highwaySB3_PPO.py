@@ -3,7 +3,7 @@ import os
 import highway_env
 from stable_baselines3 import PPO
 
-TRIAL= 10
+TRIAL= 11
 ALGO = "PPO"
 
 models_dir = f"models/{ALGO}" + str(TRIAL)
@@ -34,7 +34,7 @@ config = {
   }
 }
 
-env = gym.make("highway-v0")
+env = gym.make("highway-fast-v0")
 env.config = config
 
 model = PPO('MlpPolicy', env, verbose=1, tensorboard_log=log_dir)
