@@ -15,7 +15,7 @@ class highwaySim:
               "x": [-100, 100],
               "y": [-100, 100],
               "vx": [-20, 20],
-              "vy": [-20, 20]
+              "vy": [-20, 20] 
           },
           "absolute": False,
           "order": "sorted"
