@@ -4,10 +4,11 @@ display.start()
 
 
 import gym
-env = gym.make("LunarLander-v2", render_mode="rgb_array")
+import highway_env
+env = gym.make("highway-v0", render_mode="rgb_array")
 env.reset()
 env.action_space.seed(42)
-env = gym.wrappers.RecordVideo(env, "recording3")
+env = gym.wrappers.RecordVideo(env, "recording6")
 env.start_video_recorder()
 
 observation, info = env.reset(seed=42)
