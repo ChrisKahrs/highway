@@ -1,9 +1,9 @@
 import gym
 import highway_env
 from stable_baselines3 import PPO
-from pyvirtualdisplay import Display
-display = Display(visible=0, size=(1400, 900))
-display.start()
+# from pyvirtualdisplay import Display
+# display = Display(visible=0, size=(1400, 900))
+# display.start()
 
 env = gym.make("highway-fast-v0", render_mode="rgb_array")
 env.metadata = {'render_modes': ['human', 'rgb_array'], 'render_fps': 10}
@@ -27,4 +27,4 @@ for i in range(1):
     obs, reward, terminated, truncated, info = env.step(action)
     print("reward: ", reward)
     reward_sum += reward
-    print(env.render(mode='rgb_array'))
+    print(env.render())
