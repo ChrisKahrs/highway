@@ -18,6 +18,7 @@ model = DQN('MlpPolicy', env,
               tensorboard_log="highway_dqn/")
 print("2 - model created")
 model.learn(int(100000))
+
 model.save("highway_dqn/model")
 print("3 - model saved")
 
