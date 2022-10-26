@@ -3,7 +3,29 @@ import highway_env
 import requests
 import json
 
-env = gym.make('highway-v0')
+config = {
+  "simulation_frequency": 15,
+  "show_trajectories": False,
+  "observation": {
+    "type": "Kinematics",
+    "vehicles_count": 5,
+    "features": ["presence", "x", "y", "vx", "vy", "cos_h", "sin_h"],
+    "features_range": {
+      "x": [-100, 100],
+      "y": [-100, 100],
+      "vx": [-20, 20],
+      "vy": [-20, 20]
+    },
+    "verbose": True,
+    "absolute": False,
+    "order": "sorted"
+  }
+}
+
+env = gym.make("highway-v0", config=config)
+env.config = config
+# env = gym.wrappers.RecordEpisodeStatistics(env)
+# gym.wrappers.RenderCollection(env)
 obs = env.reset()
 print("Observation:", obs)
 
@@ -15,12 +37,14 @@ headers = {
   "Content-Type": "application/json"
 }
 endpoint = url + predictionPath
+info = {}
 
-while True:
-  done = False
+for _ in range(3):
+  terminated = truncated = done = False
   obs = env.reset()
+  print("info: ", info)
   while not done:
-    print("obs: ", obs)
+    # print("obs: ", obs)
     v1 = [float(obs[0][0]), float(obs[0][1]), float(obs[0][2]), float(obs[0][3]), float(obs[0][4]), float(obs[0][5]), float(obs[0][6])]
     v2 = [float(obs[1][0]), float(obs[1][1]), float(obs[1][2]), float(obs[1][3]), float(obs[1][4]), float(obs[1][5]), float(obs[1][6])]
     v3 = [float(obs[2][0]), float(obs[2][1]), float(obs[2][2]), float(obs[2][3]), float(obs[2][4]), float(obs[2][5]), float(obs[2][6])]
@@ -35,7 +59,7 @@ while True:
       "vehicle5":  v5
     }
     
-    print("requestBody: ", requestBody)
+    # print("requestBody: ", requestBody)
 
 # Send the POST request
     response = requests.post(
@@ -46,10 +70,11 @@ while True:
 
     # Extract the JSON response
     prediction = response.json()
-    print("prediction: ", prediction)
+    # print("prediction: ", prediction)
     action = int(prediction["steer"])
     print("action: ", action)
     obs, reward, done, info = env.step(action)
+    print("reward: ", reward)
     env.render()
     
     
