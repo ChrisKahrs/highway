@@ -2,6 +2,8 @@ from tabnanny import verbose
 import gym
 import os
 import highway_env
+import numpy as np
+
 from stable_baselines3 import PPO, DQN
 
 TRIAL= 9
