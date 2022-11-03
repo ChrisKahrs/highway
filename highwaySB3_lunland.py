@@ -1,6 +1,6 @@
 import gym
 import highway_env
-from stable_baselines3 import PPO, DQN
+from stable_baselines3 import PPO, DQN, TD3
 from moviepy.editor import ImageSequenceClip
 from gym.wrappers.record_video import capped_cubic_video_schedule
 import pprint
@@ -54,34 +54,35 @@ config = {'action': {'type': 'DiscreteMetaAction'},
  'vehicles_count': 50,
  'vehicles_density': 1}
 
-env = gym.make("highway-v0", config=config)
+env = gym.make("LunarLander-v2", continuous=True, render_mode="human")
 
 env.reset()
 env = gym.wrappers.RecordEpisodeStatistics(env)
 count = 0
 
 # Load and test saved model
-model = DQN.load("models/DQN9/run5")
+# model = DQN.load("models/DQN9/run5")
+model = TD3.load("LLmodels/TD32/run288")
 
 for i in range(3):
   terminated = truncated = done = False
   obs, info = env.reset(seed=i)
   reward_sum = 0
   screens = []
-  screen = env.render(mode='rgb_array')
+  screen = env.render()
   screens.append(screen)
   while (not truncated) and (not terminated):
     action, _states = model.predict(obs, deterministic=True)
-    action = int(action)
+    action = [float(action[0]),float(action[1])]
     obs, reward, terminated, truncated, info = env.step(action)
     reward_sum += reward
-    screen = env.render(mode='rgb_array')
+    screen = env.render()
     screens.append(screen)
     count += 1
     if terminated or truncated:
       print("reward_sum: ", reward_sum)
-      clip = ImageSequenceClip(list(screens), fps=3)
-      clip.write_gif(f'gifs/test_{count}.gif', fps=3)
+      # clip = ImageSequenceClip(list(screens), fps=3)
+      # clip.write_gif(f'gifs/test_{count}.gif', fps=3)
 
 pprint.pprint(env.return_queue)
 env.close()

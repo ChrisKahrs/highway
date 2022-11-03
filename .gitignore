@@ -1,6 +1,9 @@
 # Visual Studio cache/options directory
 .vs/
 .vscode/
+LLmodels/
+LLlogs/
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
