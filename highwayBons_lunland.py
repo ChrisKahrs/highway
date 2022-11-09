@@ -7,18 +7,20 @@ env = gym.make("LunarLander-v2", render_mode="human", continuous= True)
 obs = env.reset()
 
 # General variables
-# url = "http://localhost:5000"
-url = "https://ckll.azurewebsites.net"
+url = "http://localhost:5000"
+# url = "https://ckll.azurewebsites.net"
 predictionPath = "/v1/prediction"
 headers = {
   "Content-Type": "application/json"
 }
 endpoint = url + predictionPath
 info = {}
+total_sum = 0
+range_sum = 300
 
-for _ in range(3):
+for i in range(range_sum):
   terminated = truncated = done = False
-  obs, _ = env.reset()
+  obs, _ = env.reset(seed=i)
   reward_sum = 0
   # print("info: ", info)
   while not terminated:
@@ -51,8 +53,11 @@ for _ in range(3):
     # print("action: ", action)
     obs, reward, terminated, truncated, info = env.step(action)
     reward_sum += reward
+    total_sum += reward
     # print("reward: ", reward)
     env.render()
-  print("reward_sum: ", reward_sum)
-    
+  print(f"reward_sum{i}: {reward_sum:.0f}")
+new_avg = total_sum / range_sum
+print(f"total_avg: {new_avg:.2f}")
+
     

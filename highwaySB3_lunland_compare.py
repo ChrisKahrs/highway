@@ -59,14 +59,12 @@ env = gym.make("LunarLander-v2", continuous=True, render_mode="human")
 env.reset()
 env = gym.wrappers.RecordEpisodeStatistics(env)
 count = 0
-total_sum = 0
-range_sum = 30
 
 # Load and test saved model
 # model = DQN.load("models/DQN9/run5")
 model = TD3.load("LLmodels/TD32/run340")
 
-for i in range(range_sum):
+for i in range(3):
   terminated = truncated = done = False
   obs, info = env.reset(seed=i)
   reward_sum = 0
@@ -82,16 +80,11 @@ for i in range(range_sum):
     screens.append(screen)
     count += 1
     if terminated or truncated:
-      print(f"reward_sum{i}: {reward_sum:.0f}")
-      total_sum += reward_sum
+      print("reward_sum: ", reward_sum)
       # clip = ImageSequenceClip(list(screens), fps=3)
       # clip.write_gif(f'gifs/test_{count}.gif', fps=3)
 
-  
-new_avg = total_sum / range_sum
-print(f"total_avg: {new_avg:.2f}")
-
-# pprint.pprint(env.return_queue)
+pprint.pprint(env.return_queue)
 env.close()
 
 
